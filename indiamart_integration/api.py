@@ -27,10 +27,9 @@ def sync_india_mart_lead(from_date,to_date):
 	try:
 		india_mart_setting = frappe.get_doc("IndiaMart Setting","IndiaMart Setting")
 		if (not india_mart_setting.url
-			or not india_mart_setting.mobile_no
 			or not india_mart_setting.key):
 				frappe.throw(
-					msg=_('URL, Mobile, Key mandatory for Indiamart API Call. Please set them and try again.'),
+					msg=_('URL, Key mandatory for Indiamart API Call. Please set them and try again.'),
 					title=_('Missing Setting Fields')
 				)
 		req = get_request_url
@@ -52,8 +51,8 @@ def sync_india_mart_lead(from_date,to_date):
 
 def get_request_url(india_mart_setting):
 	req = str(india_mart_setting.url)+'GLUSR_MOBILE/'+str(india_mart_setting.mobile)+'/GLUSR_MOBILE_KEY/'+str(india_mart_setting.key)+'/Start_Time/'+str(india_mart_setting.from_date)+'/End_Time/'+str(india_mart_setting.to_date)+'/'
-	req = 'https://mapi.indiamart.com/wservce/enquiry/listing/GLUSR_MOBILE/9500617638/GLUSR_MOBILE_KEY/mR22G71v5XfETvev4nGI7l2NqlfBnDE=/Start_Time/01-AUG-202209:00:00/End_Time/04-AUG-202213:00:00/'
-	retur'n req
+	req = 'https://mapi.indiamart.com/wservce/crm/crmListing/v2/?glusr_crm_key=mR22G71v5XfETvev4nGI7l2NqlfBnDE=&start_time=01-Aug-2022&end_time=02-Aug-2022'
+	return req
 
 @frappe.whitelist()
 def cron_sync_lead():
