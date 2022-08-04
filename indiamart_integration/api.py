@@ -52,7 +52,8 @@ def sync_india_mart_lead(from_date,to_date):
 
 def get_request_url(india_mart_setting):
 	req = str(india_mart_setting.url)+'GLUSR_MOBILE/'+str(india_mart_setting.mobile)+'/GLUSR_MOBILE_KEY/'+str(india_mart_setting.key)+'/Start_Time/'+str(india_mart_setting.from_date)+'/End_Time/'+str(india_mart_setting.to_date)+'/'
-	return req
+	req = 'https://mapi.indiamart.com/wservce/enquiry/listing/GLUSR_MOBILE/9500617638/GLUSR_MOBILE_KEY/mR22G71v5XfETvev4nGI7l2NqlfBnDE=/Start_Time/01-AUG-202209:00:00/End_Time/04-AUG-202213:00:00/'
+	retur'n req
 
 @frappe.whitelist()
 def cron_sync_lead():
