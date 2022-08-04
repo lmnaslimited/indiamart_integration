@@ -33,7 +33,7 @@ def sync_india_mart_lead(from_date,to_date):
 					title=_('Missing Setting Fields')
 				)
 		req = get_request_url
-		res = requests.post(url=req)
+		res = requests.get(url=req)
 		if res.text:
 			count = 0
 			for row in json.loads(res.text):
