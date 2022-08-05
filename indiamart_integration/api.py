@@ -36,7 +36,10 @@ def sync_india_mart_lead(from_date,to_date):
 		res = requests.get(url='https://mapi.indiamart.com/wservce/crm/crmListing/v2/?glusr_crm_key=mR22G71v5XfETvev4nGI7l2NqlfBnDE=&start_time=01-Aug-2022&end_time=02-Aug-2022')
 		if res.text:
 			count = 0
-			for row in json.loads(res.text):
+			rjson = res.json()
+			response = rjson['RESPONSE']
+		#	for row in json.loads(res.text):
+			for row in response:
 				if not row.get("Error_Message")==None:
 					frappe.throw(row["Error_Message"])
 				else:
