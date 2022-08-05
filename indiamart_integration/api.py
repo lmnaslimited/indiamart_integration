@@ -33,14 +33,14 @@ def sync_india_mart_lead(from_date,to_date):
 					title=_('Missing Setting Fields')
 				)
 		req = get_request_url
-		res = requests.get(url=req)
+		res = requests.get(url='https://mapi.indiamart.com/wservce/crm/crmListing/v2/?glusr_crm_key=mR22G71v5XfETvev4nGI7l2NqlfBnDE=&start_time=01-Aug-2022&end_time=02-Aug-2022')
 		if res.text:
 			count = 0
 			for row in json.loads(res.text):
 				if not row.get("Error_Message")==None:
 					frappe.throw(row["Error_Message"])
 				else:
-					doc=add_lead(row["SENDERNAME"],row["SENDEREMAIL"],row["MOB"],row["SUBJECT"],row["QUERY_ID"])
+					doc=add_lead(row["SENDER_NAME"],row["SENDER_EMAIL"],row["SENDER_MOBILE"],row["QUERY_MESSAGE"],row["UNIQUE_QUERY_ID"])
 					if doc:
 						count += 1
 			if not count == 0:
@@ -64,14 +64,14 @@ def cron_sync_lead():
 @frappe.whitelist()
 def add_lead(lead_data):
 	try:
-		if not frappe.db.exists("Lead",{"india_mart_id":lead_data["QUERY_ID"]}):
+		if not frappe.db.exists("Lead",{"india_mart_id":lead_data["UNIQUE_QUERY_ID"]}):
 			doc = frappe.get_doc(dict(
 				doctype="Lead",
-				lead_name=lead_data["SENDERNAME"],
-				email_address=lead_data["SENDEREMAIL"],
-				phone=lead_data["MOB"],
-				requirement=lead_data["SUBJECT"],
-				india_mart_id=lead_data["QUERY_ID"],
+				lead_name=lead_data["SENDER_NAME"],
+				email_address=lead_data["SENDER_EMAIL"],
+				phone=lead_data["SENDER_MOBILE"],
+				requirement=lead_data["QUERY_MESSAGE"],
+				india_mart_id=lead_data["UNIQUE_QUERY_ID"],
 				source="India Mart"           
 			)).insert(ignore_permissions = True)
 			return doc
