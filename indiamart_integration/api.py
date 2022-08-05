@@ -43,6 +43,8 @@ def sync_india_mart_lead(from_date,to_date):
 			count = 0
 			rjson = res.json()
 			response = rjson['RESPONSE']
+			if not rjson['MESSAGE']=='':
+				frappe.throw(rjson['MESSAGE'])
 		#	for row in json.loads(res.text):
 			for row in response:
 				if not row.get("Error_Message")==None:
