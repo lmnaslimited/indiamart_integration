@@ -32,8 +32,13 @@ def sync_india_mart_lead(from_date,to_date):
 					msg=_('URL, Key mandatory for Indiamart API Call. Please set them and try again.'),
 					title=_('Missing Setting Fields')
 				)
-		req = get_request_url
-		res = requests.get(url='https://mapi.indiamart.com/wservce/crm/crmListing/v2/?glusr_crm_key=mR22G71v5XfETvev4nGI7l2NqlfBnDE=&start_time=01-Aug-2022&end_time=02-Aug-2022')
+		if from_date:
+			india_mart_setting.from_date = from_date
+		if to_date:
+			india_mart_setting.to_date = to_date
+			
+		req = get_request_url(india_mart_setting)
+		res = requests.get(url=req)
 		if res.text:
 			count = 0
 			rjson = res.json()
@@ -53,8 +58,8 @@ def sync_india_mart_lead(from_date,to_date):
 		frappe.log_error(frappe.get_traceback(), _("India Mart Sync Error"))
 
 def get_request_url(india_mart_setting):
-	req = str(india_mart_setting.url)+'GLUSR_MOBILE/'+str(india_mart_setting.mobile)+'/GLUSR_MOBILE_KEY/'+str(india_mart_setting.key)+'/Start_Time/'+str(india_mart_setting.from_date)+'/End_Time/'+str(india_mart_setting.to_date)+'/'
-	req = 'https://mapi.indiamart.com/wservce/crm/crmListing/v2/?glusr_crm_key=mR22G71v5XfETvev4nGI7l2NqlfBnDE=&start_time=01-Aug-2022&end_time=02-Aug-2022'
+	req = str(india_mart_setting.url)+'?glusr_crm_key='+str(india_mart_setting.key)+'&start_time='+str(india_mart_setting.from_date)+'&end_time='+str(india_mart_setting.to_date)+'/'
+	#req = 'https://mapi.indiamart.com/wservce/crm/crmListing/v2/?glusr_crm_key=mR22G71v5XfETvev4nGI7l2NqlfBnDE=&start_time=01-Aug-2022&end_time=02-Aug-2022'
 	return req
 
 @frappe.whitelist()
@@ -73,7 +78,7 @@ def add_lead(lead_data):
 				lead_name=lead_data["SENDER_NAME"],
 				email_address=lead_data["SENDER_EMAIL"],
 				phone=lead_data["SENDER_MOBILE"],
-				requirement=lead_data["QUERY_MESSAGE"],
+				notes=lead_data["QUERY_MESSAGE"],
 				india_mart_id=lead_data["UNIQUE_QUERY_ID"],
 				source="India Mart"           
 			)).insert(ignore_permissions = True)
