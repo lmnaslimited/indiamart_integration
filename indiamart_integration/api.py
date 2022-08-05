@@ -43,7 +43,7 @@ def sync_india_mart_lead(from_date,to_date):
 				if not row.get("Error_Message")==None:
 					frappe.throw(row["Error_Message"])
 				else:
-					doc=add_lead(row["SENDER_NAME"],row["SENDER_EMAIL"],row["SENDER_MOBILE"],row["QUERY_MESSAGE"],row["UNIQUE_QUERY_ID"])
+					doc=add_lead(row)
 					if doc:
 						count += 1
 			if not count == 0:
